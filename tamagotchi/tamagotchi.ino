@@ -1,12 +1,3 @@
-/*
- Controlling a servo position using a potentiometer (variable resistor)
- by Michal Rinott <http://people.interaction-ivrea.it/m.rinott>
-
- modified on 8 Nov 2013
- by Scott Fitzgerald
- http://www.arduino.cc/en/Tutorial/Knob
-*/
-
 #include <Servo.h>
 
 #define FullHealth 1000
@@ -39,8 +30,12 @@ void setup() {
   myservo.attach(9);  // attaches the servo on pin 9 to the servo object
   // initialize the LED pin as an output:
   pinMode(ledPin1, OUTPUT);
+  pinMode(ledPin2, OUTPUT);
+  pinMode(ledPin3, OUTPUT);
   // initialize the pushbutton pin as an input:
   pinMode(buttonPin, INPUT);
+
+
 }
 
 void loop() {
@@ -81,24 +76,39 @@ void loop() {
   Serial.print("\t output2 = ");
   Serial.println(val2);
 
-  if (health > 0 && health <= FullHealth && timetosleep > 0 && timetosleep <= Fullawaketime) {
+  if (health > 0 && timetosleep > 0) {
     analogWrite(ledPin3, val2);
     myservo.write(val1);                  // sets the servo position according to the scaled value
+    if (val2 < 50){
+      timetosleep = timetosleep - 5;
+    }
+    else {
+      timetosleep = timetosleep + 3;
+    }
   }
   else digitalWrite(ledPin2, LOW);
 
-  if (timetosleep > sleepythreshold * Fullawaketime) {
-    digitalWrite(ledPin3, HIGH);
-  }
-  else if (timetosleep > 0 && timetosleep <= sleepythreshold * Fullawaketime) {
+  if (timetosleep < 500 && timetosleep > 0) {
     digitalWrite(ledPin3, HIGH);
     delay(10);
     digitalWrite(ledPin3, LOW);
     delay(10);
   }
-  else digitalWrite(ledPin3, LOW);
+  else {
+    digitalWrite(ledPin3, HIGH);
+  }
   
+  if (health > 0  && timetosleep > 0 )
+  {
+    digitalWrite(ledPin2, HIGH);
+  }
+  else 
+  {
+    digitalWrite(ledPin2, LOW);
+  }
+
   health = health - 1;
   timetosleep = timetosleep - 1;
   delay(15);                           // waits for the servo to get there
 }
+
