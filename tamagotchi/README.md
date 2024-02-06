@@ -7,5 +7,5 @@
 |Flynn, |Code|
 |Eric|Instruction|
 |Kaushiki, Khushi|Construction|
-||Story|
+|Kaushiki, Khushi|Story|
 ||Presentation|
