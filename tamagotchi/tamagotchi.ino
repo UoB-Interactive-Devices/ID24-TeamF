@@ -3,7 +3,7 @@
 #define FullHealth 1000
 #define Fullawaketime 1000
 #define starvethreshold 0.3
-#define sleepythreshold 0.3
+#define sleepythreshold 0.5
 
 Servo myservo;  // create servo object to control a servo
 
@@ -28,11 +28,11 @@ byte lastButtonState = LOW;
 
 void setup() {
   myservo.attach(9);  // attaches the servo on pin 9 to the servo object
-  // initialize the LED pin as an output:
+  // initialize the LED pins as outputs:
   pinMode(ledPin1, OUTPUT);
   pinMode(ledPin2, OUTPUT);
   pinMode(ledPin3, OUTPUT);
-  // initialize the pushbutton pin as an input:
+  // initialize the pushbutton and light sensor pin as inputs:
   pinMode(buttonPin, INPUT);
   pinMode(potpin1, INPUT);
   pinMode(potpin2, INPUT);
@@ -40,6 +40,7 @@ void setup() {
 
 void loop() {
   byte buttonState = digitalRead(buttonPin);
+
   // if fed, the health goes to FullHealth
   if (buttonState != lastButtonState) {
     lastButtonState = buttonState;
@@ -47,8 +48,6 @@ void loop() {
       health = FullHealth;
     }
   }
-  
-  // else digitalWrite(ledPin1, LOW);
   
   if (health > 0 && timetosleep > 0) {
     if (health > starvethreshold * FullHealth && health <= FullHealth) {
@@ -93,15 +92,14 @@ void loop() {
     digitalWrite(ledPin1, LOW);
   }
 
-  if (timetosleep < 500 && timetosleep > 0) {
+  if (timetosleep < sleepythreshold * Fullawaketime && timetosleep > 0) {
     digitalWrite(ledPin3, HIGH);
     delay(10);
     digitalWrite(ledPin3, LOW);
     delay(10);
   }
-  // else digitalWrite(ledPin3, HIGH);
 
   health = health - 1;
   timetosleep = timetosleep - 1;
-  delay(15);                           // waits for the servo to get there
+  delay(15);
 }
