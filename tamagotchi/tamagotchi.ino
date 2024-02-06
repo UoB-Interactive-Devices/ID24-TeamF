@@ -34,8 +34,8 @@ void setup() {
   pinMode(ledPin3, OUTPUT);
   // initialize the pushbutton pin as an input:
   pinMode(buttonPin, INPUT);
-
-
+  pinMode(potpin1, INPUT);
+  pinMode(potpin2, INPUT);
 }
 
 void loop() {
@@ -48,37 +48,37 @@ void loop() {
     }
   }
   
-  if (health > starvethreshold * FullHealth && health <= FullHealth) {
-    digitalWrite(ledPin1, HIGH);
-  }
-  else if (health > 0 && health <= starvethreshold * FullHealth ) {
-    digitalWrite(ledPin1, HIGH);
-    delay(10);
-    digitalWrite(ledPin1, LOW);
-    delay(10);
-  }
-  else digitalWrite(ledPin1, LOW);
+  // else digitalWrite(ledPin1, LOW);
   
-  val1 = analogRead(potpin1);            // reads the value of the potentiometer (value between 0 and 1023)
-  Serial.print("sensor1 = ");
-  Serial.print(val1);
-  
-  val1 = map(val1, 400, 1000, 0, 180);     // scale it for use with the servo (value between 0 and 180)
-  Serial.print("\t output1 = ");
-  Serial.println(val1);
-  
-  
-  val2 = analogRead(potpin2);            // reads the value of the potentiometer (value between 0 and 1023)
-  Serial.print("sensor2 = ");
-  Serial.print(val2);
-  
-  val2 = map(val2, 300, 800, -40, 250);
-  Serial.print("\t output2 = ");
-  Serial.println(val2);
-
   if (health > 0 && timetosleep > 0) {
+    if (health > starvethreshold * FullHealth && health <= FullHealth) {
+      digitalWrite(ledPin1, HIGH);
+    }
+    else if (health > 0 && health <= starvethreshold * FullHealth ) {
+      digitalWrite(ledPin1, HIGH);
+      delay(10);
+      digitalWrite(ledPin1, LOW);
+      delay(10);
+    }
+    val1 = analogRead(potpin1);            // reads the value of the potentiometer (value between 0 and 1023)
+    Serial.print("sensor1 = ");
+    Serial.print(val1);
+
+    val1 = map(val1, 400, 1000, 0, 180);     // scale it for use with the servo (value between 0 and 180)
+    Serial.print("\t output1 = ");
+    Serial.println(val1);
+
+
+    val2 = analogRead(potpin2);            // reads the value of the potentiometer (value between 0 and 1023)
+    Serial.print("sensor2 = ");
+    Serial.print(val2);
+
+    val2 = map(val2, 300, 800, -40, 250);
+    Serial.print("\t output2 = ");
+    Serial.println(val2);
     analogWrite(ledPin3, val2);
     myservo.write(val1);                  // sets the servo position according to the scaled value
+    digitalWrite(ledPin2, HIGH);
     if (val2 < 50){
       timetosleep = timetosleep - 5;
     }
@@ -86,7 +86,12 @@ void loop() {
       timetosleep = timetosleep + 3;
     }
   }
-  else digitalWrite(ledPin2, LOW);
+  else if (health <= 0 || timetosleep <= 0) {
+    val2 = 0;
+    digitalWrite(ledPin2, LOW);
+    digitalWrite(ledPin3, LOW);
+    digitalWrite(ledPin1, LOW);
+  }
 
   if (timetosleep < 500 && timetosleep > 0) {
     digitalWrite(ledPin3, HIGH);
@@ -94,21 +99,9 @@ void loop() {
     digitalWrite(ledPin3, LOW);
     delay(10);
   }
-  else {
-    digitalWrite(ledPin3, HIGH);
-  }
-  
-  if (health > 0  && timetosleep > 0 )
-  {
-    digitalWrite(ledPin2, HIGH);
-  }
-  else 
-  {
-    digitalWrite(ledPin2, LOW);
-  }
+  // else digitalWrite(ledPin3, HIGH);
 
   health = health - 1;
   timetosleep = timetosleep - 1;
   delay(15);                           // waits for the servo to get there
 }
-
