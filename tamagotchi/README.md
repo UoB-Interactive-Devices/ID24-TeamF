@@ -4,7 +4,7 @@
 
 |Member|Distribution|
 |---|---|
-|Flynn, Santiago |Code|
+|Flynn, Santiago, Ethan|Code|
 |Eric|Instruction|
 |Kaushiki, Khushi|Construction|
 |Kaushiki, Khushi|Story|
