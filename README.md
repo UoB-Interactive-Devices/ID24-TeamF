@@ -1,5 +1,9 @@
 # Repo of UoB-Interactive Devices-2024-TeamF
 
+## TAs ##
+- Primary TA: Oliver
+- Secondary TA: Sven
+
 ## Meet the team
 
 From the left : Eric Yang, Santiago Ayala, Senyi Luo, Haohan Feng, Kaushiki Mudgal, Khushi Agarwal.
