@@ -1,4 +1,4 @@
-##Iteration##
+## Iteration ##
 
-###Get the Components###
-![Components](Components.jepg)
+### Get the Components ###
+![Components](iterations/Components.jpeg)
