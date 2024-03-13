@@ -8,3 +8,7 @@
 
 From the left : Eric Yang, Santiago Ayala, Senyi Luo, Haohan Feng, Kaushiki Mudgal, Khushi Agarwal.
 ![Group](IMG_8082.JPG)
+
+## Group Report ##
+
+[Draft Paper](https://www.overleaf.com/read/brwqzwrvnbwb#e0ddff "Team D")
