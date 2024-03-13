@@ -11,4 +11,4 @@ From the left : Eric Yang, Santiago Ayala, Senyi Luo, Haohan Feng, Kaushiki Mudg
 
 ## Group Report ##
 
-[Draft Paper](https://www.overleaf.com/read/brwqzwrvnbwb#e0ddff "Team D")
+[Draft Paper](https://www.overleaf.com/read/brwqzwrvnbwb#e0ddff "Team F")
