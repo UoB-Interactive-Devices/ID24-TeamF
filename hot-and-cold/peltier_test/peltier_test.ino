@@ -19,6 +19,7 @@ void setup() {
   // Set initial rotation direction
   digitalWrite(in1, LOW);
   digitalWrite(in2, HIGH);
+  Serial.begin(9600);
 }
 
 void loop() {
@@ -47,4 +48,18 @@ void loop() {
     rotDirection = 0;
     delay(20);
   }
+
+  // print the results to the Serial Monitor:
+  Serial.print("potValue = ");
+  Serial.print(potValue);
+  Serial.print("\t pwmOutput = ");
+  Serial.print(pwmOutput);
+  Serial.print("\t button = ");
+  Serial.print(digitalRead(button));
+  Serial.print("\t in1 = ");
+  Serial.print(digitalRead(in1));
+  Serial.print("\t in2 = ");
+  Serial.print(digitalRead(in2));
+  Serial.print("\t rotDirection = ");
+  Serial.println(rotDirection);
 }
