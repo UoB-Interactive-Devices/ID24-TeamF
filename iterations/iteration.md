@@ -1,4 +1,4 @@
 ## Iteration ##
 
 ### Get the Components ###
-![Components](iterations/Components.jpeg)
+![Components](Components.jpeg)
