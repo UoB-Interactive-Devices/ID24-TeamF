@@ -15,5 +15,4 @@ From the left : Eric Yang, Santiago Ayala, Senyi Luo, Haohan Feng, Kaushiki Mudg
 
 ## Related Papers ##
 *I'm currently in the process of reading these papers, so please note that some of them might not be entirely relevant or suitable for our ideas.
-[Related papers about Peltier](./Papers about Peltier.html)
-[Related papers about Navigation](./Papers about Museum Navigation.html)
+Please check the two html files for the list of papers.
