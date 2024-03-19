@@ -16,3 +16,7 @@ From the left : Eric Yang, Santiago Ayala, Senyi Luo, Haohan Feng, Kaushiki Mudg
 ## Related Papers ##
 *I'm currently in the process of reading these papers, so please note that some of them might not be entirely relevant or suitable for our ideas.
 Please check the two html files for the list of papers.
+
+
+## Indoor Positioning ##
+[Idea](https://github.com/UoB-Interactive-Devices/ID24-TeamF/blob/master/Indoor%20Positioning.md)
