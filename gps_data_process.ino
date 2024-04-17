@@ -13,6 +13,8 @@ Processing of negative values in latitude and longitude conversion
 SoftwareSerial ss(3, 2);  // RX, TX
 
 // Variable declaration
+String sentance = "";
+String gnrmc = "";
 String gngga = "";  // Stored GNGGA information
 String info[15];  // Use array to store GPS data
 
@@ -30,40 +32,113 @@ void setup() {
 
 void loop() {
   if (ss.available()) {
-    gngga = ss.readStringUntil('\n'); // Read the line until newline character
+    sentance = ss.readStringUntil('\n');
+    //gngga = ss.readStringUntil('\n'); // Read the line until newline character
+    //gngga = "$GNGGA,123519.00,4807.038,N,01131.000,E,1,08,0.9,545.4,M,46.9,M,,*47";
+    //gnrmc = "$GNRMC,123519.00,A,4807.038,N,01131.000,E,022.4,084.4,230394,003.1,W*6A";
+    Serial.println("Received sentance: " + sentance);
 
-    int infoIndex = 0;
-    int startPos = 0;
+    if (sentance.startsWith("$GNGGA")) {
+      gngga = sentance;
+      Serial.println("gngga: " + gngga);
+      int infoIndex = 0;
+      int startPos = 0;
 
-    while ((commaPosition = gngga.indexOf(',', startPos)) != -1 && infoIndex < 15) {
-      info[infoIndex++] = gngga.substring(startPos, commaPosition);
-      startPos = commaPosition + 1;
+      while ((commaPosition = gngga.indexOf(',', startPos)) != -1 && infoIndex < 15) {
+        info[infoIndex++] = gngga.substring(startPos, commaPosition);
+        startPos = commaPosition + 1;
+      }
+      if (startPos < gngga.length()) { // Catch any remaining data after the last comma
+        info[infoIndex] = gngga.substring(startPos);
+      }
+
+      Serial.println("Lati: " + info[2]);
+      Serial.println("Long: " + info[4]);
+
+      if (infoIndex >= 6) { // Make sure we have at least 7 fields (0-indexed 6)
+        float lat = convertToDecimalDegrees(info[2].toFloat());
+        float lng = convertToDecimalDegrees(info[4].toFloat());
+
+        Serial.print("Lati1: ");
+        Serial.println(lat, 6); 
+        Serial.print("Long1: ");
+        Serial.println(lng, 6);
+
+        // Test coordinates, convert to decimal degrees
+        float latitude2 = convertToDecimalDegrees(3403.1234);
+        float longitude2 = convertToDecimalDegrees(-11814.5678);
+
+        Serial.print("Lati2: ");
+        Serial.println(latitude2, 6);
+        Serial.print("Long2: ");
+        Serial.println(longitude2, 6);
+
+        // Calculate and print distance
+        float distance = calculateDistance(lat, lng, latitude2, longitude2);
+        Serial.print("Latitude: ");
+        Serial.println(lat, 6);
+        Serial.print("Longitude: ");
+        Serial.println(lng, 6);
+        Serial.print("Distance between the points: ");
+        Serial.print(distance);
+        Serial.println(" m");
+      } else {
+        Serial.println("Not enough data or data is invalid.");
+      }
+    } else if (sentance.startsWith("$GNRMC")) {
+      gnrmc = sentance;
+      Serial.println("gnrmc: " + gnrmc);
+      int infoIndex = 0;
+      int startPos = 0;
+
+      while ((commaPosition = gnrmc.indexOf(',', startPos)) != -1 && infoIndex < 15) {
+        info[infoIndex++] = gnrmc.substring(startPos, commaPosition);
+        startPos = commaPosition + 1;
+      }
+      if (startPos < gnrmc.length()) { // Catch any remaining data after the last comma
+        info[infoIndex] = gnrmc.substring(startPos);
+      }
+
+      Serial.println("Lati: " + info[2]);
+      Serial.println("Long: " + info[4]);
+
+      if (infoIndex >= 6) { // Make sure we have at least 7 fields (0-indexed 6)
+        float lat = convertToDecimalDegrees(info[2].toFloat());
+        float lng = convertToDecimalDegrees(info[4].toFloat());
+
+        Serial.print("Lati1: ");
+        Serial.println(lat, 6); 
+        Serial.print("Long1: ");
+        Serial.println(lng, 6);
+
+        // Test coordinates, convert to decimal degrees
+        float latitude2 = convertToDecimalDegrees(3403.1234);
+        float longitude2 = convertToDecimalDegrees(-11814.5678);
+
+        Serial.print("Lati2: ");
+        Serial.println(latitude2, 6);
+        Serial.print("Long2: ");
+        Serial.println(longitude2, 6);
+
+        // Calculate and print distance
+        float distance = calculateDistance(lat, lng, latitude2, longitude2);
+        Serial.print("Latitude: ");
+        Serial.println(lat, 6);
+        Serial.print("Longitude: ");
+        Serial.println(lng, 6);
+        Serial.print("Distance between the points: ");
+        Serial.print(distance);
+        Serial.println(" m");
+      } else {
+        Serial.println("Not enough data or data is invalid.");
+      }
+      } else {
+        // Ignore sentences that are not GNGGA or GNRMC
+        Serial.println("It's not gngga or gnrmc");
+        return;
+      }
     }
-    if (startPos < gngga.length()) { // Catch any remaining data after the last comma
-      info[infoIndex] = gngga.substring(startPos);
-    }
-
-    if (infoIndex >= 6) { // Make sure we have at least 7 fields (0-indexed 6)
-      float lat = convertToDecimalDegrees(info[2].toFloat());
-      float lng = convertToDecimalDegrees(info[4].toFloat());
-
-      // Test coordinates, convert to decimal degrees
-      float latitude2 = convertToDecimalDegrees(3403.1234);
-      float longitude2 = convertToDecimalDegrees(-11814.5678);
-
-      // Calculate and print distance
-      float distance = calculateDistance(lat, lng, latitude2, longitude2);
-      Serial.print("Latitude: ");
-      Serial.println(lat, 6);
-      Serial.print("Longitude: ");
-      Serial.println(lng, 6);
-      Serial.print("Distance between the points: ");
-      Serial.print(distance);
-      Serial.println(" km");
-    } else {
-      Serial.println("Not enough data or data is invalid.");
-    }
-  }
+    
   delay(5000); // Delay for 5 seconds before next read
 }
 
