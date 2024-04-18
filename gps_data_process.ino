@@ -99,8 +99,8 @@ void loop() {
         info[infoIndex] = gnrmc.substring(startPos);
       }
 
-      Serial.println("Lati: " + info[2]);
-      Serial.println("Long: " + info[4]);
+      Serial.println("Lati: " + info[3]);
+      Serial.println("Long: " + info[5]);
 
       if (infoIndex >= 6) { // Make sure we have at least 7 fields (0-indexed 6)
         float lat = convertToDecimalDegrees(info[2].toFloat());
