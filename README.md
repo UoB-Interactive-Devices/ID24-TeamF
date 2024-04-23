@@ -11,7 +11,7 @@ From the left : Eric Yang, Santiago Ayala, Senyi Luo, Haohan Feng, Kaushiki Mudg
 
 ## Group Report ##
 
-[Draft Paper](https://www.overleaf.com/read/brwqzwrvnbwb#e0ddff "Team F")
+[Draft Paper]([https://www.overleaf.com/read/brwqzwrvnbwb#e0ddff](https://www.overleaf.com/read/qcjvphznqvyv#ccb1d1) "Team F")
 
 ## Related Papers ##
 *I'm currently in the process of reading these papers, so please note that some of them might not be entirely relevant or suitable for our ideas.
