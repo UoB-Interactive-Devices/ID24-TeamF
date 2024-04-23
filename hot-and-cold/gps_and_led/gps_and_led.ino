@@ -6,6 +6,7 @@
 
 #define RADIUS_EARTH 6371      // Earth radius in kilometers
 #define enA 9
+#define ledPin 11
 #define in1 6
 #define in2 7
 #define RX 3
@@ -50,7 +51,7 @@ void setup() {
   while (!Serial); // wait for Serial to be ready
 
   Serial.begin(115200);
-  delay(5000);
+  delay(3000);
   Serial.println("\n **********HeatHunt starting!**********");
   mySerial.begin(9600);
   // uncomment this line to receive all data
@@ -71,12 +72,13 @@ void setup() {
   // GPS.sendCommand(PGCMD_ANTENNA);
 
   pinMode(enA, OUTPUT);
+  pinMode(ledPin, OUTPUT);
   pinMode(in1, OUTPUT);
   pinMode(in2, OUTPUT);
-  // pinMode(button, INPUT);
   // Set initial rotation direction
   digitalWrite(in1, LOW);
   digitalWrite(in2, HIGH);
+  digitalWrite(ledPin, LOW);
 }
 
 void loop() {
@@ -109,16 +111,28 @@ void loop() {
   Serial.println(" m");
 
   // Map distance to potentiometer value
-  int potValue = map(distance, 20, 100000, 255, 0); // Inverse mapping: closer -> higher potValue
-  analogWrite(enA, potValue);
-
+  int potValue = map(distance, 20, 200, 0, 2000); // Inverse mapping: closer -> higher potValue
+  
   Serial.print("Mapped potValue: ");
   Serial.println(potValue);
-  Serial.print("enA: ");
-  Serial.println(digitalRead(enA));
   Serial.println("-------------------------------------");
+  // analogWrite(ledPin, potValue);
 
-  delay(2000); // Delay for 2 seconds before repeating
+  if (distance < 20) {
+    digitalWrite(ledPin, HIGH);
+    // No delay
+  } else {
+    // Otherwise, adjust the delay based on distance
+    // Turn LED on
+    digitalWrite(ledPin, HIGH);
+    // Wait for the calculated delay
+    delay(potValue);
+    // Turn LED off
+    digitalWrite(ledPin, LOW);
+    // Wait for the same delay
+    delay(potValue);
+  }
+  // delay(2000); // Delay for 2 seconds before repeating
 }
 
 void clearGPS() {
