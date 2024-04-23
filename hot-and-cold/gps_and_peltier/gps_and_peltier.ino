@@ -8,22 +8,31 @@
 #define enA 9
 #define in1 6
 #define in2 7
-#define button 4
-
-int rotDirection = 0;
-int pressed = false;
-
-SoftwareSerial mySerial(3, 2);
-Adafruit_GPS GPS(&mySerial);
+#define RX 3
+#define TX 2
+// use define to choose target place
+// #define RoyalForkGarden
+#define CantocksCloseBusStop
 
 // Set GPSECHO to 'false' to turn off echoing the GPS data to the Serial console
 // Set to 'true' if you want to debug and listen to the raw GPS sentences
 #define GPSECHO  false
 
+SoftwareSerial mySerial(RX, TX);
+Adafruit_GPS GPS(&mySerial);
+
 float latPlayer;      // Variable to store player's latitude
 float longPlayer;     // Variable to store player's longitude
-float latPlace = 51.4575094;   // Latitude of the place in DDMM.MMMM format
-float longPlace = -2.6025733; // Longitude of the place in DDMM.MMMM format
+
+#ifdef RoyalForkGarden
+  float latPlace = 51.45783686779149;
+  float longPlace = -2.602806472990425;
+#endif
+
+#ifdef CantocksCloseBusStop
+float latPlace = 51.4558301767948;
+float longPlace = -2.6023120229001377;
+#endif
 
 char c;
 
@@ -33,7 +42,7 @@ float calculateDistance(float lat1, float lon1, float lat2, float lon2) {
   float dLon = radians(lon2 - lon1);
   float a = sin(dLat / 2) * sin(dLat / 2) + cos(radians(lat1)) * cos(radians(lat2)) * sin(dLon / 2) * sin(dLon / 2);
   float c = 2 * atan2(sqrt(a), sqrt(1 - a));
-  float distance = RADIUS_EARTH * c;
+  float distance = RADIUS_EARTH * c * 1000;
   return distance;
 }
 
@@ -42,7 +51,7 @@ void setup() {
 
   Serial.begin(115200);
   delay(5000);
-  Serial.println("HeatHunt starting!");
+  Serial.println("\n **********HeatHunt starting!**********");
   mySerial.begin(9600);
   // uncomment this line to receive all data
   // GPS.sendCommand(PMTK_SET_NMEA_OUTPUT_ALLDATA);
@@ -64,7 +73,7 @@ void setup() {
   pinMode(enA, OUTPUT);
   pinMode(in1, OUTPUT);
   pinMode(in2, OUTPUT);
-  pinMode(button, INPUT);
+  // pinMode(button, INPUT);
   // Set initial rotation direction
   digitalWrite(in1, LOW);
   digitalWrite(in2, HIGH);
@@ -80,73 +89,32 @@ void loop() {
   GPS.parse(GPS.lastNMEA());
 
   Serial.print("Fix: ");
-  Serial.print(GPS.fix);
-  Serial.print(" quality: ");
-  Serial.println(GPS.fixquality);
-  Serial.print("Satellites: ");
-  Serial.println(GPS.satellites);
+  Serial.println(GPS.fix);
+  // Serial.print(" quality: ");
+  // Serial.println(GPS.fixquality);
+  // Serial.print("Satellites: ");
+  // Serial.println(GPS.satellites);
 
-  if (GPS.fix) {
-    Serial.print("Location: ");
-    Serial.print(GPS.latitude, 4);
-    Serial.print(GPS.lat);
-    Serial.print(", ");
-    Serial.print(GPS.longitude, 4);
-    Serial.println(GPS.lon);
-    Serial.print("Google Maps location: ");
-    Serial.print(GPS.latitudeDegrees, 4);
-    Serial.print(", ");
-    Serial.println(GPS.longitudeDegrees, 4);
-  }
-  Serial.println("-------------------------------------");
+  Serial.print("Location: ");
+  Serial.print(GPS.latitudeDegrees, 4);
+  Serial.print(", ");
+  Serial.println(GPS.longitudeDegrees, 4);
 
   latPlayer = GPS.latitudeDegrees;
   longPlayer = GPS.longitudeDegrees;
-
   // Calculate distance between player and place
   float distance = calculateDistance(latPlayer, longPlayer, latPlace, longPlace);
+  Serial.print("Distance: ");
+  Serial.print(distance);
+  Serial.println(" m");
 
   // Map distance to potentiometer value
-  int potValue = map(distance, 0, 1, 255, 0); // Inverse mapping: closer -> higher potValue
-
-  // Apply potentiometer value to motor control
+  int potValue = map(distance, 20, 200, 255, 0); // Inverse mapping: closer -> higher potValue
   analogWrite(enA, potValue);
 
-  // Read button - Debounce
-  if (digitalRead(button) == true) {
-    pressed = !pressed;
-  }
-  while (digitalRead(button) == true);
-  delay(20);
-
-  // If button is pressed - change rotation direction
-  if (pressed == true  & rotDirection == 0) {
-    digitalWrite(in1, HIGH);
-    digitalWrite(in2, LOW);
-    rotDirection = 1;
-    delay(20);
-  }
-  // If button is pressed - change rotation direction
-  if (pressed == false & rotDirection == 1) {
-    digitalWrite(in1, LOW);
-    digitalWrite(in2, HIGH);
-    rotDirection = 0;
-    delay(20);
-  }
-
-  // print the results to the Serial Monitor:
-  Serial.print("Distance between player and place: ");
-  Serial.print(distance);
-  Serial.print(" km | Mapped potValue: ");
-  Serial.print(potValue);
-  Serial.print(" | Button: ");
-  Serial.print(digitalRead(button));
-  Serial.print(" | in1: ");
-  Serial.print(digitalRead(in1));
-  Serial.print(" | in2: ");
-  Serial.print(digitalRead(in2));
-  Serial.print(" | Rotation Direction: ");
-  Serial.println(rotDirection);
+  Serial.print("Mapped potValue: ");
+  Serial.println(potValue);
+  Serial.println("-------------------------------------");
 
   delay(2000); // Delay for 2 seconds before repeating
 }
