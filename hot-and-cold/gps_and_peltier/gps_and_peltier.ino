@@ -5,24 +5,31 @@
 
 
 #define RADIUS_EARTH 6371      // Earth radius in kilometers
+#define ledPin 11
+#define output 10
 #define enA 9
 #define in1 6
 #define in2 7
 #define RX 3
 #define TX 2
 // use define to choose target place
-// #define RoyalForkGarden
-#define CantocksCloseBusStop
+#define RoyalForkGarden
+// #define CantocksCloseBusStop
+// #define MVB
 
 // Set GPSECHO to 'false' to turn off echoing the GPS data to the Serial console
 // Set to 'true' if you want to debug and listen to the raw GPS sentences
 #define GPSECHO  false
+
+#define MAXPOTVALUE 170 // change from 0 t0 255 to control the max heat
 
 SoftwareSerial mySerial(RX, TX);
 Adafruit_GPS GPS(&mySerial);
 
 float latPlayer;      // Variable to store player's latitude
 float longPlayer;     // Variable to store player's longitude
+
+int potValue;
 
 #ifdef RoyalForkGarden
   float latPlace = 51.45783686779149;
@@ -32,6 +39,11 @@ float longPlayer;     // Variable to store player's longitude
 #ifdef CantocksCloseBusStop
 float latPlace = 51.4558301767948;
 float longPlace = -2.6023120229001377;
+#endif
+
+#ifdef MVB
+  float latPlace = 51.4561034;
+  float longPlace = -2.6028726;
 #endif
 
 char c;
@@ -68,15 +80,17 @@ void setup() {
   // print it out we don't suggest using anything higher than 1 Hz
 
   // Request updates on antenna status, comment out to keep quiet
-  // GPS.sendCommand(PGCMD_ANTENNA);
+  GPS.sendCommand(PGCMD_ANTENNA);
 
   pinMode(enA, OUTPUT);
   pinMode(in1, OUTPUT);
   pinMode(in2, OUTPUT);
-  // pinMode(button, INPUT);
+  pinMode(ledPin, OUTPUT);
+  pinMode(output, OUTPUT);
   // Set initial rotation direction
   digitalWrite(in1, LOW);
   digitalWrite(in2, HIGH);
+  digitalWrite(output, HIGH);
 }
 
 void loop() {
@@ -108,17 +122,27 @@ void loop() {
   Serial.print(distance);
   Serial.println(" m");
 
+  if (distance < 20) {
+    digitalWrite(ledPin, HIGH);
+  }
+
   // Map distance to potentiometer value
-  int potValue = map(distance, 20, 100000, 255, 0); // Inverse mapping: closer -> higher potValue
+  if (distance < 20) {
+    potValue = MAXPOTVALUE;
+  }
+  else if (distance > 20 && distance <= 60) {
+    potValue = map(distance, 20, 60, MAXPOTVALUE, 0);
+  }
+  else {
+    potValue = 0;
+  } // Inverse mapping: closer -> higher potValue
   analogWrite(enA, potValue);
 
   Serial.print("Mapped potValue: ");
   Serial.println(potValue);
-  Serial.print("enA: ");
-  Serial.println(digitalRead(enA));
   Serial.println("-------------------------------------");
 
-  delay(2000); // Delay for 2 seconds before repeating
+  delay(1000); // Delay for 1 seconds before repeating
 }
 
 void clearGPS() {
