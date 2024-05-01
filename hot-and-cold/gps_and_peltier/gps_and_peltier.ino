@@ -12,10 +12,12 @@
 #define in2 7
 #define RX 3
 #define TX 2
+
 // use define to choose target place
-#define RoyalForkGarden
+// #define RoyalForkGarden
 // #define CantocksCloseBusStop
-// #define MVB
+#define MVB
+// #define MVBstairs
 
 // Set GPSECHO to 'false' to turn off echoing the GPS data to the Serial console
 // Set to 'true' if you want to debug and listen to the raw GPS sentences
@@ -42,8 +44,13 @@ float longPlace = -2.6023120229001377;
 #endif
 
 #ifdef MVB
-  float latPlace = 51.4561034;
-  float longPlace = -2.6028726;
+  float latPlace = 51.45654391968006;
+  float longPlace = -2.6033398263678746;
+#endif
+
+#ifdef MVBstairs
+  float latPlace = 51.4558620403858;
+  float longPlace = -2.6037738571728886;
 #endif
 
 char c;
@@ -124,6 +131,9 @@ void loop() {
 
   if (distance < 20) {
     digitalWrite(ledPin, HIGH);
+  }
+  else {
+    digitalWrite(ledPin, LOW);
   }
 
   // Map distance to potentiometer value
