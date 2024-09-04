@@ -11,18 +11,5 @@ From the left : Eric Yang, Santiago Ayala, Senyi Luo, Haohan Feng, Kaushiki Mudg
 
 ## Group Report ##
 
-[Draft Paper](https://www.overleaf.com/read/qcjvphznqvyv#ccb1d1 "Team F")
+[Paper](https://www.overleaf.com/read/qcjvphznqvyv#ccb1d1 "Team F")
 
-## Related Papers ##
-*I'm currently in the process of reading these papers, so please note that some of them might not be entirely relevant or suitable for our ideas.
-Please check the two html files for the list of papers.
-
-## Abstract and Intro ##
-I have added a file containing this.
-
-## Design and implementation ##
-Currently Kaushiki and Khushi are working on the final design implementation and first study.
-
-
-## Indoor Positioning ##
-[Idea](https://github.com/UoB-Interactive-Devices/ID24-TeamF/blob/master/Indoor%20Positioning.md)
