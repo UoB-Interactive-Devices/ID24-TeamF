@@ -23,7 +23,7 @@
 // Set to 'true' if you want to debug and listen to the raw GPS sentences
 #define GPSECHO  false
 
-#define MAXPOTVALUE 170 // change from 0 t0 255 to control the max heat
+#define MAXPOTVALUE 180 // change from 0 t0 255 to control the max heat
 
 SoftwareSerial mySerial(RX, TX);
 Adafruit_GPS GPS(&mySerial);
